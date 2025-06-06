@@ -1,7 +1,4 @@
-USE mydb;
-
-
-
+USE hospitais;
 
 /*Procedimento identificar(novo_cc, novo_nif, novo_nome, nova_morada, novo_cod_postal, nova_data_nascimento)
 
@@ -71,3 +68,48 @@ CALL identificar(NULL, 123422789, 'João Silva', NULL, NULL, '1990-05-21');
 CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
 
 
+
+
+
+DELIMITER $$
+CREATE FUNCTION idade(data_in DATE)
+RETURNS INT
+BEGIN
+	RETURN TIMESTAMPDIFF(YEAR, data_in, CURDATE());
+END$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+
+CREATE PROCEDURE atualizar_inspecao_viatura(IN p_idViatura INT)
+BEGIN
+DECLARE v_data_matricula DATE;
+DECLARE v_idade INT;
+DECLARE v_nova_data DATE;
+
+-- Obter a data da matrícula
+SELECT data_matricula INTO v_data_matricula
+FROM Viatura
+WHERE idViatura = p_idViatura;
+
+-- Calcular idade da viatura
+SET v_idade = idade(v_data_matricula);
+
+-- Calcular nova data limite de inspeção
+IF v_idade < 1 THEN
+    SET v_nova_data = DATE_ADD(v_data_matricula, INTERVAL 1 YEAR);
+ELSEIF v_idade < 8 THEN
+    SET v_nova_data = DATE_ADD(CURDATE(), INTERVAL 1 YEAR);
+ELSE
+    SET v_nova_data = DATE_ADD(CURDATE(), INTERVAL 6 MONTH);
+END IF;
+
+-- Atualizar a viatura com a nova data limite
+UPDATE Viatura
+SET data_limite_inspecao = v_nova_data
+WHERE idViatura = p_idViatura;
+END$$
+
+DELIMITER ;
