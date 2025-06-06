@@ -61,6 +61,7 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- Teste
 CALL identificar(NULL, 123422789, 'João Silva', NULL, NULL, '1990-05-21');
 CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
 
