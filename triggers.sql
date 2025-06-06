@@ -1,5 +1,52 @@
 -- Triggers --
 
+-- Para explicar no relatório --
+
+-- Trigger 1 (+ função) --
+-- Função que verifica se inspeção está em dia: Recebe a matricula, retorna TRUE ou FALSE --
+DELIMITER $$
+CREATE FUNCTION inspecao_valida_viatura(matric VARCHAR(8))
+RETURNS BOOLEAN
+READS SQL DATA
+BEGIN
+  DECLARE data_inspecao DATE;
+  SELECT data_inspecao_proxima INTO data_inspecao
+  FROM Viatura
+  WHERE matricula = matric;
+  RETURN (data_inspecao IS NULL OR data_inspecao >= CURDATE());
+END$$
+DELIMITER ;
+
+-- Impedir criação de missão onde a viatura não tem a inpseção em dia --
+DELIMITER $$
+CREATE TRIGGER trg_validar_inspecao_viatura
+BEFORE INSERT ON Missao
+FOR EACH ROW
+BEGIN
+  IF NOT inspecao_valida_viatura(NEW.viatura) THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Viatura com inspeção vencida não pode ser usada.';
+  END IF;
+END$$
+DELIMITER ;
+
+
+-- Trigger 2 --
+-- Evitar domínios de email inválidos: seguem a estrutura de %@%.% --
+DELIMITER $$
+CREATE TRIGGER trg_validacao_email
+BEFORE INSERT ON email_epcs
+FOR EACH ROW
+BEGIN
+  IF NEW.email NOT LIKE '%@%.%' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Email inválido.';
+  END IF;
+END $$
+DELIMITER ;
+
+
+-- Triggers extra --
 -- Atualiza o estado de emergência da viatura:  quando a missão é criada com a viatura, marca-a como em missão --
 DELIMITER $$
 CREATE TRIGGER trg_viatura_em_missao
@@ -77,26 +124,8 @@ END$$
 DELIMITER ;
 
 
-
-
-
--- Evitar domínios de email inválidos: --
-DELIMITER $$
-CREATE TRIGGER trg_validacao_email
-BEFORE INSERT ON email_epcs
-FOR EACH ROW
-BEGIN
-  IF NEW.email NOT LIKE '%@%.%' THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Email inválido.';
-  END IF;
-END $$
-DELIMITER ;
-
-
 -- desativar automaticamente outras missões ativas do profissional --
 -- antes de inserir um novo registo Pertence com ativo = 1, desativa os anteriores para o mesmo profissional --
-
 DELIMITER $$
 CREATE TRIGGER trg_limpa_missoes_ativas
 BEFORE INSERT ON Pertence
@@ -109,8 +138,6 @@ BEGIN
   END IF;
 END $$
 DELIMITER ;
-
-
 
 -- so poder atribuir equipamento quando ambulância não em missão --
 DELIMITER $$
@@ -129,9 +156,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-
 -- impedir mais de 3 profissionais em uma missão --
-
 DELIMITER $$
 CREATE TRIGGER trg_limite_profissionais_missao
 BEFORE INSERT ON Pertence
@@ -148,24 +173,6 @@ BEGIN
 END$$
 DELIMITER ;
 
--- se se tentar criar uma missão onde a viatura esta sem a inspeção em dia não deixa --
-DELIMITER $$
-CREATE TRIGGER trg_validar_inspecao_viatura
-BEFORE INSERT ON Missao
-FOR EACH ROW
-BEGIN
-  DECLARE data_inspecao DATE;
-  SELECT data_inspecao_proxima INTO data_inspecao
-  FROM Viatura
-  WHERE matricula = NEW.viatura;
-  IF data_inspecao IS NOT NULL AND data_inspecao < CURDATE() THEN
-    SIGNAL SQLSTATE '45000'
-    SET MESSAGE_TEXT = 'Viatura com inspeção vencida não pode ser usada.';
-  END IF;
-END$$
-DELIMITER ;
-
-
 -- impede que se adicione equipamento sem a data de inspeção valida --
 DELIMITER $$
 CREATE TRIGGER trg_verifica_inspecao_equipamento
@@ -178,7 +185,6 @@ BEGIN
   END IF;
 END$$
 DELIMITER ;
-
 
 -- trigger que impede profissional inserido em 2 missoes com sobreposição de hora --
 DELIMITER $$
@@ -206,8 +212,3 @@ BEGIN
   END IF;
 END$$
 DELIMITER ;
-
-
-
-
-
