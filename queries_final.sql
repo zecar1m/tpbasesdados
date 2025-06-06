@@ -1,4 +1,4 @@
-use hospitais;
+-- Queries que verificam o cumpreimento dos requisitos
 
 -- Querie 1: Listar as EPCS organizadas por ULS e grupo
 SELECT e.nif, e.nregisto, e.nome, e.morada, e.codigo_postal, u.nome AS uls_nome, u.grupo
