@@ -15,7 +15,6 @@ Em primeiro lugar, verifica se existe algum cc ou nif correspondentes na tabela 
 	Se não existir uma correspondência de cc ou nif, então insere-se a informação nova num novo registo              
 */
 
-
 DELIMITER $$
 CREATE PROCEDURE identificar(
 	IN novo_cc INT,
@@ -62,8 +61,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
-
 CALL identificar(NULL, 123422789, 'João Silva', NULL, NULL, '1990-05-21');
 CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
 
@@ -81,35 +78,43 @@ DELIMITER ;
 
 
 
+
+/*Procedimento inspecao_viatura(in_matricula VARCHAR(8))
+Modo de utilização previsto:
+No dia da inspeção a uma determinada viatura, chamar o procedimento com a sua matrícula
+de modo, guardando a data atual como data_inspecao_anterior e calculando a nova data limite de inspeção
+com base na idade da matrícula.
+Seguindo o Código da Estrada:
+"4 — Automóveis ligeiros licenciados para transporte público de passageiros e ambulâncias:
+Um ano após a data da primeira matrícula e, em seguida, anualmente, até perfazerem sete anos; no 8.º ano e seguintes, semestralmente."
+*/
+
 DELIMITER $$
-
-CREATE PROCEDURE atualizar_inspecao_viatura(IN p_idViatura INT)
+CREATE PROCEDURE inspecao_viatura(IN in_matricula VARCHAR(8))
 BEGIN
-DECLARE v_data_matricula DATE;
-DECLARE v_idade INT;
-DECLARE v_nova_data DATE;
+    DECLARE data_mat DATE;
+    DECLARE nova_data_inspecao DATE;
 
--- Obter a data da matrícula
-SELECT data_matricula INTO v_data_matricula
-FROM Viatura
-WHERE idViatura = p_idViatura;
+    -- Obter a data de matrícula
+    SELECT data_matricula INTO data_mat 
+    FROM Viatura
+    WHERE matricula = in_matricula;
 
--- Calcular idade da viatura
-SET v_idade = idade(v_data_matricula);
+    -- Calcular a próxima data de inspeção
+    IF idade(data_mat) < 7 THEN
+        SET nova_data_inspecao = DATE_ADD(CURDATE(), INTERVAL 1 YEAR);
+    ELSE
+        SET nova_data_inspecao = DATE_ADD(CURDATE(), INTERVAL 6 MONTH);
+    END IF;
 
--- Calcular nova data limite de inspeção
-IF v_idade < 1 THEN
-    SET v_nova_data = DATE_ADD(v_data_matricula, INTERVAL 1 YEAR);
-ELSEIF v_idade < 8 THEN
-    SET v_nova_data = DATE_ADD(CURDATE(), INTERVAL 1 YEAR);
-ELSE
-    SET v_nova_data = DATE_ADD(CURDATE(), INTERVAL 6 MONTH);
-END IF;
-
--- Atualizar a viatura com a nova data limite
-UPDATE Viatura
-SET data_limite_inspecao = v_nova_data
-WHERE idViatura = p_idViatura;
+    -- Atualizar as datas de inspeção na tabela Viatura
+    UPDATE Viatura
+    SET
+        data_inspecao_anterior = CURDATE(),
+        data_inspecao_proxima = nova_data_inspecao
+    WHERE matricula = in_matricula;
 END$$
-
 DELIMITER ;
+
+
+call inspecao_viatura('12-AB-34');
