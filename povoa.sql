@@ -367,27 +367,27 @@ INSERT INTO Viatura (matricula, marca, tipo, data_matricula, data_inspecao_anter
 ('12-GH-34', 'Hyundai', 'V005', '2017-05-05', '2023-05-02', '2025-05-31', 0, 530123456);
 
 -- ---------------------------------------POVOAR EQUIPAMENTO-----------------------------------------------------------------
-INSERT INTO Equipamento (descricao, quantidade, tipo, data_inspecao_anterior, data_inspecao_proxima, viatura) VALUES
-('FERNO 26-M', 2, 'AMB001', '2024-12-05', '2025-12-05', '23-CD-45'), 
-('Zoll AED Plus', 1, 'AMB002', '2024-12-05', '2025-12-05', '45-GH-67'), 
-('GE Carescape V100', 3, 'AMB003', '2025-03-07', '2025-09-01', '67-KL-89'),
-('Weinmann Medumat Standard²', 2, 'AMB004', '2025-03-07', '2025-09-01', '11-UV-45'),
-('First Aid Elite Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '10-MN-34'),
-('Spencer Shell', 1, 'AMB006', '2024-12-05', '2025-12-05', '12-AB-34'),
-('CleanPack Pro', 3, 'AMB007', '2025-03-07', '2025-09-01', '34-EF-56'),
-('Kenwood NX-5200', 2, 'AMB008', '2024-12-05', '2025-12-05', '56-IJ-78'),
-('Oxylitre 3L', 4, 'AMB009', '2024-12-05', '2025-12-05', '78-MN-90'),
-('Baxter SIGMA Spectrum', 1, 'AMB010', '2025-03-07', '2025-09-01', '89-OP-12'),
-('Hamilton T1', 2, 'AMB011', '2025-03-07', '2025-09-01', '90-QR-23'),
-('Invacare Action 3', 1, 'AMB012', '2024-12-05', '2025-12-05', '01-ST-34'),
-('Laerdal Stifneck', 3, 'AMB006', '2024-12-05', '2025-12-05', '22-WX-56'),
-('Defibtech Lifeline VIEW', 2, 'AMB002', '2024-12-05', '2025-12-05', '33-YZ-67'),
-('Philips HeartStart FRx', 4, 'AMB002', '2024-12-05', '2025-12-05', '44-AB-78'),
-('3M Littmann Classic III', 3, 'AMB003', '2025-03-07', '2025-09-01', '55-CD-89'),
-('Philips Respironics', 2, 'AMB004', '2025-03-07', '2025-09-01', '66-EF-90'),
-('Adventure Medical Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '77-GH-01'),
-('ASP Traction Splint', 1, 'AMB006', '2024-12-05', '2025-12-05', '88-IJ-12'),
-('Motorola XPR 7550', 3, 'AMB008', '2024-12-05', '2025-12-05', '99-KL-23');
+INSERT INTO Equipamento (numero_serie, descricao, quantidade, tipo, data_inspecao_anterior, data_inspecao_proxima, viatura) VALUES
+('184203', 'FERNO 26-M', 2, 'AMB001', '2024-12-05', '2025-12-05', '23-CD-45'), 
+('902317', 'Zoll AED Plus', 1, 'AMB002', '2024-12-05', '2025-12-05', '45-GH-67'), 
+('635190', 'GE Carescape V100', 3, 'AMB003', '2025-03-07', '2025-09-01', '67-KL-89'),
+('748210', 'Weinmann Medumat Standard²', 2, 'AMB004', '2025-03-07', '2025-09-01', '11-UV-45'),
+('384762', 'First Aid Elite Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '10-MN-34'),
+('120874', 'Spencer Shell', 1, 'AMB006', '2024-12-05', '2025-12-05', '12-AB-34'),
+('569803', 'CleanPack Pro', 3, 'AMB007', '2025-03-07', '2025-09-01', '34-EF-56'),
+('981374', 'Kenwood NX-5200', 2, 'AMB008', '2024-12-05', '2025-12-05', '56-IJ-78'),
+('236701', 'Oxylitre 3L', 4, 'AMB009', '2024-12-05', '2025-12-05', '78-MN-90'),
+('654901', 'Baxter SIGMA Spectrum', 1, 'AMB010', '2025-03-07', '2025-09-01', '89-OP-12'),
+('879135', 'Hamilton T1', 2, 'AMB011', '2025-03-07', '2025-09-01', '90-QR-23'),
+('713460', 'Invacare Action 3', 1, 'AMB012', '2024-12-05', '2025-12-05', '01-ST-34'),
+('419062', 'Laerdal Stifneck', 3, 'AMB006', '2024-12-05', '2025-12-05', '22-WX-56'),
+('560721', 'Defibtech Lifeline VIEW', 2, 'AMB002', '2024-12-05', '2025-12-05', '33-YZ-67'),
+('847392', 'Philips HeartStart FRx', 4, 'AMB002', '2024-12-05', '2025-12-05', '44-AB-78'),
+('395084', '3M Littmann Classic III', 3, 'AMB003', '2025-03-07', '2025-09-01', '55-CD-89'),
+('902846', 'Philips Respironics', 2, 'AMB004', '2025-03-07', '2025-09-01', '66-EF-90'),
+('137658', 'Adventure Medical Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '77-GH-01'),
+('861940', 'ASP Traction Splint', 1, 'AMB006', '2024-12-05', '2025-12-05', '88-IJ-12'),
+('741209', 'Motorola XPR 7550', 3, 'AMB008', '2024-12-05', '2025-12-05', '99-KL-23');
 
 -- ------------------------------------------POVOAR MISSAO-------------------------------------------------------------------------
 
