@@ -106,6 +106,21 @@ ORDER BY p.idpaciente;
 
 
 
+-- Query 8: Tipo de equipamento mais presente por quantidade nos veículos por tipo de missão
 
-
+SELECT t1.TipoMissao, t1.TipoEquipamento, t1.Total AS Contagem
+FROM (
+	SELECT tm.tipo AS TipoMissao, te.tipo AS TipoEquipamento, SUM(e.quantidade) AS Total
+	FROM tipo_equipamento te, equipamento e, viatura v, missao m, tipo_missao tm
+    WHERE e.tipo = te.idTipo AND e.viatura = v.matricula AND m.viatura = v.matricula AND tm.idtipo = m.tipo
+    GROUP BY tm.tipo, te.tipo
+) t1
+LEFT JOIN (
+	SELECT tm.tipo AS TipoMissao, te.tipo AS TipoEquipamento, SUM(e.quantidade) AS Total
+    FROM tipo_equipamento te, equipamento e, viatura v, missao m, tipo_missao tm 
+	WHERE e.tipo = te.idTipo AND e.viatura = v.matricula AND m.viatura = v.matricula AND tm.idtipo = m.tipo
+    GROUP BY tm.tipo, te.tipo
+) t2
+ON t1.TipoMissao = t2.TipoMissao AND t1.Total < t2.Total
+WHERE t2.TipoMissao IS NULL;
 
