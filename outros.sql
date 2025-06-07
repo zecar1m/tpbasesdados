@@ -169,7 +169,7 @@ Tem a capacidade de serem passados valores nulos em qualquer campo que os profis
 Explicação do funcionamento do procedimento:
 Em primeiro lugar, verifica se existe algum cc ou nif correspondentes na tabela Pacientes.
 
-	Se existir, é atualizado no primeiro registo que cumpra essa condição cna tabela Pacientes:
+	Se existir, é atualizado no primeiro registo que cumpra essa condição na tabela Pacientes:
 		--> Para cada campo: se novo_[campo] não for um valor nulo, então o campo é atualizado com a nova informação
 						     se novo_[campo] for um valor nulo, mantém-se a informação incumbente para esse campo
                              
