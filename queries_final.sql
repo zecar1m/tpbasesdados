@@ -4,13 +4,13 @@
 SELECT e.*, u.nome AS uls_nome, u.grupo
 FROM epcs e
 JOIN uls u ON e.uls = u.idULS
-ORDER BY u.idULS, u.grupo;
+ORDER BY u.grupo, u.idULS;
 
 -- Querie 2: Lista as epcs por localidade
 SELECT e.*, cod.Localidade
 FROM epcs e
 JOIN codigo_postal cod ON e.codigo_postal = cod.codigo_postal
-ORDER BY cod.localidade;
+ORDER BY e.codigo_postal;
 
 -- Querie 3: Lista os emails por epcs
 SELECT email.*, e.nome as nome_epcs
