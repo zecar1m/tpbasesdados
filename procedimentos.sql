@@ -61,12 +61,13 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- Teste
 CALL identificar(NULL, 123422789, 'João Silva', NULL, NULL, '1990-05-21');
 CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
 
 
 
-
+-- Função idade
 
 DELIMITER $$
 CREATE FUNCTION idade(data_in DATE)
@@ -75,8 +76,6 @@ BEGIN
 	RETURN TIMESTAMPDIFF(YEAR, data_in, CURDATE());
 END$$
 DELIMITER ;
-
-
 
 
 /*Procedimento inspecao_viatura(in_matricula VARCHAR(8))
@@ -116,5 +115,107 @@ BEGIN
 END$$
 DELIMITER ;
 
-
+-- Teste
 call inspecao_viatura('12-AB-34');
+
+
+
+/* Função validar_telefone
+Valida se o número telefónico introduzido tem 9 caracteres e o primeiro caracter é 2 ou 9
+*/
+
+DELIMITER $$
+CREATE FUNCTION validar_telefone(telefone INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	IF (telefone BETWEEN 200000000 AND 299999999) OR (telefone BETWEEN 900000000 AND 999999999) THEN
+		RETURN TRUE;
+	ELSE
+		RETURN FALSE;
+	END IF;
+END$$
+DELIMITER ;
+
+
+
+
+/*Função entidade_nif(in_nif INT)
+Recebe um NIF e verifica se há correspondência na base de dados nas tabelas Pacientes ou EPCS ou Profissionais.
+Devolvendo uma string que caracteriza a tabela onde foi encontrado o NIF.
+*/
+DELIMITER $$
+CREATE FUNCTION entidade_nif(in_nif INT)
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    DECLARE resultado VARCHAR(20);
+
+    -- Verifica se o NIF existe na tabela Pacientes
+    IF EXISTS (SELECT 1 FROM Pacientes WHERE nif = in_nif) THEN
+        SET resultado = 'paciente';
+
+    -- Verifica se o NIF existe na tabela EPCS
+    ELSEIF EXISTS (SELECT 1 FROM EPCS WHERE nif = in_nif) THEN
+        SET resultado = 'epcs';
+
+    -- Verifica se o NIF existe na tabela Profissionais
+    ELSEIF EXISTS (SELECT 1 FROM Profissionais WHERE nif = in_nif) THEN
+        SET resultado = 'profissional';
+
+    ELSE
+        SET resultado = 'nenhum';
+    END IF;
+
+    RETURN resultado;
+END$$
+DELIMITER ;
+
+-- Teste
+SELECT entidade_nif(513456789);
+
+
+
+/* Procedimento adicionar_telefone(IN in_tlf INT, IN in_nif INT)
+1- Valida o telefone.
+2- Determina a que tabela pertence o NIF introduzido.
+3- Introduz um registo para o telefone, com o NIF na coluna correspondente e as restantes com valor NULL.
+*/
+DELIMITER $$
+CREATE PROCEDURE adicionar_telefone(IN in_tlf INT, IN in_nif INT)
+BEGIN
+    DECLARE entidade VARCHAR(10);
+
+    -- Validação do telefone
+    IF validar_telefone(in_tlf) = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O número telefónico introduzido é inválido.';
+    END IF;
+	
+    IF EXISTS(SELECT 1 FROM telefone WHERE in_tlf=telefone.telefone) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O número telefónico introduzido já existe na base de dados.';
+    END IF;
+    
+    -- Verificar a entidade associada ao nif
+    SET entidade = entidade_nif(in_nif);
+
+    IF entidade = 'nenhum' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'O NIF introduzido não tem correspondência na base de dados.';
+        
+    ELSEIF entidade = 'paciente' THEN
+        INSERT INTO telefone (telefone, epcs, profissional, paciente)
+        VALUES (in_tlf, NULL, NULL, in_nif);
+        
+    ELSEIF entidade = 'profissional' THEN
+        INSERT INTO telefone (telefone, epcs, profissional, paciente)
+        VALUES (in_tlf, NULL, in_nif, NULL);
+        
+    ELSEIF entidade = 'epcs' THEN
+        INSERT INTO telefone (telefone, epcs, profissional, paciente)
+        VALUES (in_tlf, in_nif, NULL, NULL);
+        
+    END IF;
+END$$
+DELIMITER ;
+
+-- Teste
+CALL adicionar_telefone(929123595,123456789);

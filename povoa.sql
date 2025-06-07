@@ -367,61 +367,77 @@ INSERT INTO Viatura (matricula, marca, tipo, data_matricula, data_inspecao_anter
 ('12-GH-34', 'Hyundai', 'V005', '2017-05-05', '2023-05-02', '2025-05-31', 0, 530123456);
 
 -- ---------------------------------------POVOAR EQUIPAMENTO-----------------------------------------------------------------
-INSERT INTO Equipamento (descricao, quantidade, tipo, data_inspecao_anterior, data_inspecao_proxima, viatura) VALUES
-('FERNO 26-M', 2, 'AMB001', '2024-12-05', '2025-12-05', '23-CD-45'), 
-('Zoll AED Plus', 1, 'AMB002', '2024-12-05', '2025-12-05', '45-GH-67'), 
-('GE Carescape V100', 3, 'AMB003', '2025-03-07', '2025-09-01', '67-KL-89'),
-('Weinmann Medumat Standard²', 2, 'AMB004', '2025-03-07', '2025-09-01', '11-UV-45'),
-('First Aid Elite Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '10-MN-34'),
-('Spencer Shell', 1, 'AMB006', '2024-12-05', '2025-12-05', '12-AB-34'),
-('CleanPack Pro', 3, 'AMB007', '2025-03-07', '2025-09-01', '34-EF-56'),
-('Kenwood NX-5200', 2, 'AMB008', '2024-12-05', '2025-12-05', '56-IJ-78'),
-('Oxylitre 3L', 4, 'AMB009', '2024-12-05', '2025-12-05', '78-MN-90'),
-('Baxter SIGMA Spectrum', 1, 'AMB010', '2025-03-07', '2025-09-01', '89-OP-12'),
-('Hamilton T1', 2, 'AMB011', '2025-03-07', '2025-09-01', '90-QR-23'),
-('Invacare Action 3', 1, 'AMB012', '2024-12-05', '2025-12-05', '01-ST-34'),
-('Laerdal Stifneck', 3, 'AMB006', '2024-12-05', '2025-12-05', '22-WX-56'),
-('Defibtech Lifeline VIEW', 2, 'AMB002', '2024-12-05', '2025-12-05', '33-YZ-67'),
-('Philips HeartStart FRx', 4, 'AMB002', '2024-12-05', '2025-12-05', '44-AB-78'),
-('3M Littmann Classic III', 3, 'AMB003', '2025-03-07', '2025-09-01', '55-CD-89'),
-('Philips Respironics', 2, 'AMB004', '2025-03-07', '2025-09-01', '66-EF-90'),
-('Adventure Medical Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '77-GH-01'),
-('ASP Traction Splint', 1, 'AMB006', '2024-12-05', '2025-12-05', '88-IJ-12'),
-('Motorola XPR 7550', 3, 'AMB008', '2024-12-05', '2025-12-05', '99-KL-23');
+INSERT INTO Equipamento (numero_serie, descricao, quantidade, tipo, data_inspecao_anterior, data_inspecao_proxima, viatura) VALUES
+('184203', 'FERNO 26-M', 2, 'AMB001', '2024-12-05', '2025-12-05', '23-CD-45'), 
+('902317', 'Zoll AED Plus', 1, 'AMB002', '2024-12-05', '2025-12-05', '45-GH-67'), 
+('635190', 'GE Carescape V100', 3, 'AMB003', '2025-03-07', '2025-09-01', '67-KL-89'),
+('748210', 'Weinmann Medumat Standard²', 2, 'AMB004', '2025-03-07', '2025-09-01', '11-UV-45'),
+('384762', 'First Aid Elite Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '10-MN-34'),
+('120874', 'Spencer Shell', 1, 'AMB006', '2024-12-05', '2025-12-05', '12-AB-34'),
+('569803', 'CleanPack Pro', 3, 'AMB007', '2025-03-07', '2025-09-01', '34-EF-56'),
+('981374', 'Kenwood NX-5200', 2, 'AMB008', '2024-12-05', '2025-12-05', '56-IJ-78'),
+('236701', 'Oxylitre 3L', 4, 'AMB009', '2024-12-05', '2025-12-05', '78-MN-90'),
+('654901', 'Baxter SIGMA Spectrum', 1, 'AMB010', '2025-03-07', '2025-09-01', '89-OP-12'),
+('879135', 'Hamilton T1', 2, 'AMB011', '2025-03-07', '2025-09-01', '90-QR-23'),
+('713460', 'Invacare Action 3', 1, 'AMB012', '2024-12-05', '2025-12-05', '01-ST-34'),
+('419062', 'Laerdal Stifneck', 3, 'AMB006', '2024-12-05', '2025-12-05', '22-WX-56'),
+('560721', 'Defibtech Lifeline VIEW', 2, 'AMB002', '2024-12-05', '2025-12-05', '33-YZ-67'),
+('847392', 'Philips HeartStart FRx', 4, 'AMB002', '2024-12-05', '2025-12-05', '44-AB-78'),
+('395084', '3M Littmann Classic III', 3, 'AMB003', '2025-03-07', '2025-09-01', '55-CD-89'),
+('902846', 'Philips Respironics', 2, 'AMB004', '2025-03-07', '2025-09-01', '66-EF-90'),
+('137658', 'Adventure Medical Kit', 5, 'AMB005', '2025-03-07', '2025-09-01', '77-GH-01'),
+('861940', 'ASP Traction Splint', 1, 'AMB006', '2024-12-05', '2025-12-05', '88-IJ-12'),
+('741209', 'Motorola XPR 7550', 3, 'AMB008', '2024-12-05', '2025-12-05', '99-KL-23');
 
 -- ------------------------------------------POVOAR MISSAO-------------------------------------------------------------------------
 
 INSERT INTO Missao (tipo, descricao, viatura) VALUES
+-- TM001
 ('TM001', 'Transporte urgente de paciente em estado crítico', '23-CD-45'),
-('TM002', 'Intervenção rápida para acidente rodoviário', '45-GH-67'),
-('TM003', 'Suporte avançado em unidade móvel no local', '67-KL-89'),
-('TM004', 'Transferência hospitalar programada para tratamento especializado', '11-UV-45'),
-('TM005', 'Atendimento domiciliário a paciente com mobilidade reduzida', '10-MN-34'),
-('TM006', 'Formação prática para novos condutores de ambulância', '12-AB-34'),
-('TM007', 'Transporte de órgãos para cirurgia urgente', '34-EF-56'),
-('TM008', 'Suporte psicológico a vítimas de desastre', '56-IJ-78'),
 ('TM001', 'Transporte de paciente estável para consulta externa', '78-MN-90'),
-('TM002', 'Intervenção rápida em incêndio com vítimas', '89-OP-12'),
-('TM003', 'Suporte avançado em acidente de viação múltipla', '90-QR-23'),
-('TM004', 'Transferência hospitalar neonatal para unidade especializada', '01-ST-34'),
-('TM005', 'Atendimento domiciliário a idoso com problemas respiratórios', '22-WX-56'),
-('TM006', 'Sessão de treino para primeiros socorros', '33-YZ-67'),
-('TM007', 'Transporte de órgãos entre hospitais de diferentes cidades', '44-AB-78'),
-('TM008', 'Suporte psicológico a familiares em situação de emergência', '55-CD-89'),
 ('TM001', 'Transporte de paciente para cirurgia programada', '66-EF-90'),
-('TM002', 'Intervenção rápida em acidente industrial', '77-GH-01'),
-('TM003', 'Suporte avançado em evento desportivo de grande escala', '88-IJ-12'),
-('TM004', 'Transferência hospitalar para tratamento oncológico', '99-KL-23'),
-('TM005', 'Atendimento domiciliário para paciente com necessidades especiais', '20-OP-45'),
-('TM006', 'Formação teórica e prática para técnicos de emergência', '30-QR-56'),
-('TM007', 'Transporte urgente de órgãos para transplante', '40-ST-67'),
-('TM008', 'Suporte psicológico pós-catástrofe natural', '50-UV-78'),
 ('TM001', 'Transporte de paciente para exames complementares', '60-WX-89'),
+
+-- TM002
+('TM002', 'Intervenção rápida para acidente rodoviário', '45-GH-67'),
+('TM002', 'Intervenção rápida em incêndio com vítimas', '89-OP-12'),
+('TM002', 'Intervenção rápida em acidente industrial', '77-GH-01'),
 ('TM002', 'Intervenção rápida em acidente doméstico com múltiplas vítimas', '70-YZ-90'),
+
+-- TM003
+('TM003', 'Suporte avançado em unidade móvel no local', '67-KL-89'),
+('TM003', 'Suporte avançado em acidente de viação múltipla', '90-QR-23'),
+('TM003', 'Suporte avançado em evento desportivo de grande escala', '88-IJ-12'),
 ('TM003', 'Suporte avançado em operações de resgate em zonas rurais', '80-AB-01'),
+
+-- TM004
+('TM004', 'Transferência hospitalar programada para tratamento especializado', '11-UV-45'),
+('TM004', 'Transferência hospitalar neonatal para unidade especializada', '01-ST-34'),
+('TM004', 'Transferência hospitalar para tratamento oncológico', '99-KL-23'),
 ('TM004', 'Transferência hospitalar para tratamento intensivo', '90-CD-12'),
+
+-- TM005
+('TM005', 'Atendimento domiciliário a paciente com mobilidade reduzida', '10-MN-34'),
+('TM005', 'Atendimento domiciliário a idoso com problemas respiratórios', '22-WX-56'),
+('TM005', 'Atendimento domiciliário para paciente com necessidades especiais', '20-OP-45'),
 ('TM005', 'Atendimento domiciliário para pacientes crónicos', '01-EF-23'),
-('TM006', 'Simulação e treino em cenários de emergência', '12-GH-34');
+
+-- TM006
+('TM006', 'Formação prática para novos condutores de ambulância', '12-AB-34'),
+('TM006', 'Sessão de treino para primeiros socorros', '33-YZ-67'),
+('TM006', 'Formação teórica e prática para técnicos de emergência', '30-QR-56'),
+('TM006', 'Simulação e treino em cenários de emergência', '12-GH-34'),
+
+-- TM007
+('TM007', 'Transporte de órgãos para cirurgia urgente', '34-EF-56'),
+('TM007', 'Transporte de órgãos entre hospitais de diferentes cidades', '44-AB-78'),
+('TM007', 'Transporte urgente de órgãos para transplante', '40-ST-67'),
+
+-- TM008
+('TM008', 'Suporte psicológico a vítimas de desastre', '56-IJ-78'),
+('TM008', 'Suporte psicológico a familiares em situação de emergência', '55-CD-89'),
+('TM008', 'Suporte psicológico pós-catástrofe natural', '50-UV-78');
+
 
 -- ------------------------------------------------------POVOAR PACIENTES-----------------------------------------------------------
 INSERT INTO Pacientes (cc, nif, nome, morada, cod_postal, data_nascimento) VALUES
@@ -467,45 +483,38 @@ INSERT INTO Pacientes (cc, nif, nome, morada, cod_postal, data_nascimento) VALUE
 
 -- -----------------------------------------POVOAR ASSISTENCIA----------------------------------------------------------------------
 INSERT INTO Assistencia (data_hora_assist, missao, paciente) VALUES
-('2021-01-10 08:30:00', 1, 5),
-('2021-05-21 16:45:00', 2, 12),
-('2021-07-15 09:20:00', 3, 8),
-('2021-08-25 10:15:00', 4, 20),
-('2021-09-30 11:50:00', 5, 3),
-('2022-02-05 23:59:59', 1, 17),
-('2022-03-07 07:30:00', 6, 10),
-('2022-04-10 05:30:00', 2, 14),
-('2022-06-12 09:45:00', 3, 7),
-('2022-08-15 12:00:00', 7, 2),
-('2022-10-20 14:15:00', 5, 19),
-('2022-11-01 08:00:00', 4, 11),
-('2023-01-03 10:30:00', 6, 9),
-('2023-03-07 13:45:00', 2, 16),
-('2023-04-05 11:00:00', 1, 13),
-('2023-05-12 12:30:00', 7, 18),
-('2023-07-15 14:00:00', 3, 4),
-('2023-09-18 15:30:00', 5, 6),
-('2023-11-21 09:00:00', 4, 1),
-('2024-01-03 11:15:00', 6, 15),
-('2024-02-11 08:45:00', 1, 20),
-('2024-03-17 14:10:00', 2, 7),
-('2024-04-25 10:05:00', 3, 9),
-('2024-05-30 16:00:00', 4, 14),
-('2024-06-12 09:30:00', 5, 13),
-('2024-07-19 07:20:00', 6, 12),
-('2024-08-23 15:45:00', 7, 8),
-('2024-09-29 18:30:00', 1, 5),
-('2024-10-30 20:00:00', 2, 16),
-('2024-11-28 21:15:00', 3, 18),
-('2024-12-15 08:00:00', 4, 19),
-('2025-01-10 13:35:00', 5, 17),
-('2025-02-14 14:45:00', 6, 10),
-('2025-03-20 09:00:00', 7, 3),
-('2025-04-18 12:20:00', 1, 4),
-('2025-05-25 16:40:00', 2, 11),
-('2025-06-01 08:10:00', 3, 6),
-('2025-06-05 10:50:00', 4, 2),
-('2025-05-15 17:30:00', 5, 1);
+('2025-01-01 08:00:00', 1, 5),
+('2025-01-05 09:15:00', 2, 12),
+('2025-01-10 07:45:00', 3, 8),
+('2025-01-15 10:00:00', 4, 20),
+('2025-01-20 11:30:00', 5, 3),
+('2025-02-01 14:00:00', 6, 10),
+('2025-02-03 08:30:00', 7, 2),
+('2025-02-05 13:45:00', 8, 19),
+('2025-02-10 09:00:00', 9, 14),
+('2025-02-15 07:00:00', 10, 1),
+('2025-03-01 08:30:00', 11, 6),
+('2025-03-05 10:45:00', 12, 11),
+('2025-03-10 12:00:00', 13, 4),
+('2025-03-15 15:15:00', 14, 16),
+('2025-03-20 09:45:00', 15, 17),
+('2025-04-01 08:00:00', 16, 13),
+('2025-04-05 09:15:00', 17, 15),
+('2025-04-10 07:45:00', 18, 7),
+('2025-04-15 10:00:00', 19, 9),
+('2025-04-20 11:30:00', 20, 18),
+('2025-05-01 14:00:00', 21, 20),
+('2025-05-03 08:30:00', 22, 8),
+('2025-05-05 13:45:00', 23, 5),
+('2025-05-10 09:00:00', 24, 13),
+('2025-05-15 07:00:00', 25, 19),
+('2025-06-01 08:30:00', 26, 3),
+('2025-06-05 10:45:00', 27, 12),
+('2025-06-10 12:00:00', 28, 6),
+('2025-06-15 15:15:00', 29, 1),
+('2025-06-20 09:45:00', 30, 7);
+
+
 
 -- -----------------------------------------POVOAR PROFISSIONAIS----------------------------------------------------------------
 INSERT INTO Profissionais (nif, cc, cedula_profissional, nome, morada, cod_postal, data_nascimento, categoria) VALUES
@@ -582,6 +591,7 @@ INSERT INTO Pertence (data_hora_inicio, missao, profissional, data_hora_fim, ati
 ('2025-06-10 12:00:00', 28, 823456789, '2025-06-10 15:30:00', 0),
 ('2025-06-15 15:15:00', 29, 923456789, NULL, 1),
 ('2025-06-20 09:45:00', 30, 102345678, '2025-06-20 13:00:00', 0);
+
 
 -- --------------------------------------POVOAR TELEFONE-----------------------------------------------------------------
 -- para epcs

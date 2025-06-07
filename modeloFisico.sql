@@ -137,7 +137,7 @@ ENGINE = InnoDB;
 -- Table `hospitais`.`Equipamento`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hospitais`.`Equipamento` (
-  `numero_serie` INT NOT NULL AUTO_INCREMENT,
+  `numero_serie` INT NOT NULL,
   `descricao` VARCHAR(80) NOT NULL,
   `quantidade` INT NOT NULL,
   `tipo` VARCHAR(10) NOT NULL,
