@@ -38,7 +38,11 @@ DELIMITER ;
 -- Teste
 SELECT entidade_nif(513456789);
 
--- Função que verifica se inspeção está em dia: Recebe a matricula, retorna TRUE ou FALSE --
+
+/* Função inspecao_valida_viatura(matric VARCHAR(8))
+Recebe como input uma matrícula e determina se está em cumprimento da inspeção (TRUE)
+ou se está em incumprimento legal (FALSE)
+*/
 DELIMITER $$
 CREATE FUNCTION inspecao_valida_viatura(matric VARCHAR(8))
 RETURNS BOOLEAN
@@ -60,8 +64,9 @@ SELECT inspecao_valida_viatura('23-CD-45') as resultado;
 -- Funções Auxiliares 
 
 
--- Função idade
-
+/* Função idade
+Determina quantos anos passaram desde a data que recebe no input
+*/
 DELIMITER $$
 CREATE FUNCTION idade(data_in DATE)
 RETURNS INT
@@ -97,8 +102,10 @@ DELIMITER ;
 
 -- Triggers principais
 
--- Trigger 1 --
--- Impedir criação de missão onde a viatura não tem a inpseção em dia --
+/* Trigger 1 trg_validar_inspecao_viatura
+Impede a criação de missões onde a viatura não tem a inspeção em dia.
+Utiliza a função inspecao_valida_viatura para fazer a verificação.
+*/
 DELIMITER $$
 CREATE TRIGGER trg_validar_inspecao_viatura
 BEFORE INSERT ON Missao
@@ -114,8 +121,11 @@ DELIMITER ;
 -- Teste do Trigger 1 --
 INSERT INTO Missao (id_missao, tipo, descricao, viatura) VALUES (1, 'TM01', 'TESTE UM DOIS', '23-CD-45'); -- Cria missão, e ve-se o resultado esperado (erro) --
 
--- Trigger 2 --
--- Evitar domínios de email inválidos: seguem a estrutura de %@%.% --
+
+/* Trigger 2 trg_validacao_email
+Impede a inserção de domínios de email inválidos.
+Os emails devem seguir a estrutura %@%.%
+*/
 DELIMITER $$
 CREATE TRIGGER trg_validacao_email
 BEFORE INSERT ON email_epcs
@@ -133,8 +143,11 @@ INSERT INTO email_epcs(email, epcs) VALUES('1234@1234.1234', 501234567) -- Cria 
 
 -- Outro trigger
 
--- Trigger 3 --
--- Atualiza o estado de emergência da viatura:  quando a missão é criada com a viatura, marca-a como em missão --
+
+/* Trigger 3 trg_viatura_em_missao
+Atualiza o estado de atividade da viatura.
+Quando uma missão é criada, a viatura associada é marcada como estando em missão.
+*/
 DELIMITER $$
 CREATE TRIGGER trg_viatura_em_missao
 AFTER INSERT ON Missao
