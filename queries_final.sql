@@ -1,4 +1,4 @@
--- Queries
+-- Queries --
 
 -- Querie 1: Listar as EPCS organizadas por ULS e grupo
 SELECT e.*, u.nome AS uls_nome, u.grupo
@@ -6,86 +6,103 @@ FROM epcs e
 JOIN uls u ON e.uls = u.idULS
 ORDER BY u.grupo, u.idULS;
 
--- Querie 2: Lista as epcs por localidade
-SELECT e.*, cod.Localidade
+-- Querie 2: Listar as EPCS com localidade, emails e telefones
+SELECT 
+  e.nif,
+  e.nome,
+  e.morada,
+  e.codigo_postal,
+  cod.Localidade,
+  GROUP_CONCAT(DISTINCT email.email ORDER BY email.email SEPARATOR '; ') AS emails,
+  GROUP_CONCAT(DISTINCT tel.telefone ORDER BY tel.telefone SEPARATOR '; ') AS telefones
 FROM epcs e
 JOIN codigo_postal cod ON e.codigo_postal = cod.codigo_postal
-ORDER BY e.codigo_postal;
-
--- Querie 3: Lista os emails por epcs
-SELECT email.*, e.nome as nome_epcs
-FROM epcs e 
-JOIN email_epcs email ON e.nif = email.epcs
+LEFT JOIN email_epcs email ON e.nif = email.epcs
+LEFT JOIN telefone tel ON e.nif = tel.epcs
+GROUP BY e.nif, e.nome, e.morada, e.codigo_postal, cod.Localidade
 ORDER BY e.nif;
 
--- Querie 4: Listar os telefones por epcs 
-SELECT tel.telefone, tel.epcs, e.nome as nome_epcs
-FROM epcs e
-JOIN telefone tel ON e.nif = tel.epcs;
-
--- Querie 5: Listar as viaturas por epcs e tipos de viaturas
-SELECT v.*, tipo_v.tipo as tipo_viatura, e.nome as epcs_nome
+-- Querie 3: Viaturas com status de inspeção e estado de missão por EPCS
+SELECT 
+  v.matricula,  v.marca, v.tipo, v.data_matricula,
+  v.data_inspecao_anterior, v.data_inspecao_proxima,
+  e.nome AS epcs_nome,
+  CASE WHEN v.data_inspecao_proxima >= CURRENT_DATE THEN 'Inspecao em dia' ELSE 'Inspecao atrasada' END AS status_inspecao,
+  CASE WHEN v.em_missao = 1 THEN 'Em missão' ELSE 'Disponível' END AS estado_missao
 FROM viatura v
-JOIN epcs e ON e.nif = v.epcs
-JOIN tipo_viatura tipo_v ON v.tipo= tipo_v.idTipo
-ORDER BY v.epcs, tipo_v.tipo;
+JOIN epcs e ON v.epcs = e.nif
+ORDER BY e.nif;
 
--- Querie 6: Lista todas as viaturas em missão por epcs
-SELECT v.*, e.nome as nome_epcs
-FROM viatura v
-JOIN epcs e ON e.nif = v.epcs
-WHERE v.em_missao = 1
-ORDER BY v.epcs;
-
--- Querie 7: Determinar o intervalo entre as inspecoes marcadas e comparar com o intervalo de inspecao especido para cada equipamento
-SELECT eq.numero_serie, eq.descricao, eq.quantidade, eq.tipo, DATEDIFF(eq.data_inspecao_proxima, data_inspecao_anterior) as intervalo_inspecoes_marcadas, eq.viatura, tipo_eq.intervalo_inspecao
+-- Querie 4: Equipamentos por viatura, com tipo de equipamento, intervalo de inspeção e validação
+SELECT 
+  v.matricula, v.marca, 
+  eq.numero_serie, eq.descricao, eq.quantidade,
+  tipo_eq.tipo AS tipo_equipamento,
+  DATEDIFF(eq.data_inspecao_proxima, eq.data_inspecao_anterior) AS intervalo_inspecoes_marcadas,
+  tipo_eq.intervalo_inspecao,
+  CASE WHEN DATEDIFF(eq.data_inspecao_proxima, eq.data_inspecao_anterior) > tipo_eq.intervalo_inspecao THEN 'Inspecao atrasada' ELSE 'Inspecao ok' END AS status_inspecao
 FROM equipamento eq
-JOIN tipo_equipamento tipo_eq ON eq.tipo=tipo_eq.idTipo
-ORDER BY eq.numero_serie;
-
--- Querie 8: Listar as viaturas com os tipos de equipamentos e quantidades existentes
-SELECT v.*, eq.tipo,  tipo_eq.tipo as tipo_equipamentos,  eq.quantidade as quantidade_equipamentos
-FROM equipamento eq 
-JOIN viatura v ON v.matricula = eq.viatura
+JOIN viatura v ON eq.viatura = v.matricula
 JOIN tipo_equipamento tipo_eq ON eq.tipo = tipo_eq.idTipo
-ORDER BY v.matricula, tipo_eq.tipo, eq.quantidade;
+ORDER BY v.matricula;
 
--- Querie 9: Listar todas as viaturas por tipos de missao
-SELECT v.*, tipo_m.idtipo as idtipo_missao, tipo_m.tipo as tipo_missao
+-- Querie 5: Missões com tipo de missão, profissionais e pacientes assistidos
+SELECT 
+  m.id_missao, 
+  tipo_m.tipo AS tipo_missao, 
+  v.matricula,
+  COUNT(DISTINCT p.profissional) AS numero_profissionais,
+  GROUP_CONCAT(DISTINCT p.profissional ORDER BY p.profissional SEPARATOR ', ') AS profissionais,
+  COUNT(DISTINCT a.paciente) AS numero_pacientes_assistidos,
+  GROUP_CONCAT(DISTINCT a.paciente ORDER BY a.paciente SEPARATOR ', ') AS pacientes_assistidos
 FROM missao m
-JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
-JOIN viatura v ON m.viatura=v.matricula
-ORDER BY tipo_m.idtipo;
+JOIN tipo_missao tipo_m ON m.tipo = tipo_m.idtipo
+JOIN viatura v ON m.viatura = v.matricula
+LEFT JOIN pertence p ON p.missao = m.id_missao 
+LEFT JOIN assistencia a ON a.missao = m.id_missao
+GROUP BY m.id_missao, tipo_m.tipo, v.matricula
+ORDER BY m.id_missao;
 
--- Querie 10: Visualizar os profissionais por categoria e atividade
-SELECT prof.*, c.descricao as descricao_categoria, p.ativo
-FROM pertence p
-JOIN profissionais prof ON prof.nif=p.profissional
-JOIN categoria c ON c.idCategoria= prof.categoria
-ORDER BY prof.categoria, p.ativo;
+-- Querie 6: Profissionais por categoria com localidade, contacto e estado ativo em missões
+SELECT 
+  prof.nif, 
+  prof.cc, 
+  prof.cedula_profissional, 
+  prof.nome, 
+  prof.morada, 
+  prof.cod_postal, 
+  cod.localidade, 
+  prof.data_nascimento,
+  c.descricao AS categoria,
+  GROUP_CONCAT(DISTINCT tel.telefone ORDER BY tel.telefone SEPARATOR '; ') AS telefones,
+  CASE 
+    WHEN EXISTS (
+      SELECT 1 
+      FROM pertence p 
+      WHERE p.profissional = prof.nif AND p.ativo = 1
+    ) THEN 'Ativo em missão' 
+    ELSE 'Inativo' 
+  END AS estado_missao
+FROM profissionais prof
+JOIN categoria c ON prof.categoria = c.idCategoria
+JOIN telefone tel ON prof.nif = tel.profissional
+JOIN codigo_postal cod ON prof.cod_postal = cod.codigo_postal
+GROUP BY 
+  prof.nif, prof.cc, prof.cedula_profissional, prof.nome, prof.morada, prof.cod_postal, 
+  cod.localidade, prof.data_nascimento, c.descricao
+ORDER BY prof.categoria;
 
--- Querie 11: Visualizar os pacientes assistidos por tipo de missão
-SELECT p.*, tipo_m.tipo as tipo_missao
-FROM assistencia a
-JOIN pacientes p ON a.paciente=p.idpaciente
-JOIN missao m ON a.missao = m.id_missao
-JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
-ORDER BY tipo_m.idtipo;
+-- Querie 7: Pacientes com localidade e telefone
+SELECT 
+  p.idpaciente, p.cc, p.nif,  p.nome, p.morada, p.cod_postal, cod.Localidade, p.data_nascimento, 
+  GROUP_CONCAT(DISTINCT tel.telefone ORDER BY tel.telefone SEPARATOR '; ') AS telefones
+FROM pacientes p
+LEFT JOIN telefone tel ON p.nif = tel.paciente
+LEFT JOIN codigo_postal cod ON p.cod_postal = cod.codigo_postal
+GROUP BY 
+  p.idpaciente, p.cc, p.nif,  p.nome, p.morada, p.cod_postal, cod.Localidade, p.data_nascimento
+ORDER BY p.idpaciente;
 
--- Querie 12: Listar missões por tipo de missao e atividade
-SELECT m.*, tipo_m.tipo as tipo_missao, p.ativo
-FROM missao m
-JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
-JOIN pertence p ON p.missao= m.id_missao
-ORDER BY tipo_m.idtipo, p.ativo;
-
--- Querie 13: Determinar a quantidade de profissionais, por missao e categoria 
-SELECT p.missao, c.descricao, COUNT(*) as quantidade
-FROM pertence p
-JOIN profissionais prof ON p.profissional=prof.nif
-JOIN categoria c ON prof.categoria=c.idCategoria
-GROUP BY p.missao, c.descricao
-ORDER BY p.missao;
 
 
 
