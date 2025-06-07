@@ -383,6 +383,7 @@ INSERT INTO Missao (tipo, descricao, viatura) VALUES
 ('TM001', 'Transporte de paciente estável para consulta externa', '78-MN-90'),
 ('TM001', 'Transporte de paciente para cirurgia programada', '66-EF-90'),
 ('TM001', 'Transporte de paciente para exames complementares', '60-WX-89'),
+('TM001', 'Transporte urgente de paciente em estado crítico', '12-AB-34'),
 
 -- TM002: intervenção rápida (V001, V003, V004)
 ('TM002', 'Intervenção rápida para acidente rodoviário', '45-GH-67'),
