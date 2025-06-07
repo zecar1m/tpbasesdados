@@ -1,73 +1,85 @@
--- Queries que verificam o cumpreimento dos requisitos
+-- Queries
 
 -- Querie 1: Listar as EPCS organizadas por ULS e grupo
-SELECT e.nif, e.nregisto, e.nome, e.morada, e.codigo_postal, u.nome AS uls_nome, u.grupo
+SELECT e.*, u.nome AS uls_nome, u.grupo
 FROM epcs e
 JOIN uls u ON e.uls = u.idULS
-ORDER BY u.grupo, u.idULS;
+ORDER BY u.idULS, u.grupo;
 
--- Querie 2: Visualizar a localidade de uma determinada EPCS (ex: '501234567')
-SELECT e.nif, e.nome, cod.localidade
+-- Querie 2: Lista as epcs por localidade
+SELECT e.*, cod.Localidade
 FROM epcs e
 JOIN codigo_postal cod ON e.codigo_postal = cod.codigo_postal
-WHERE e.nif='501234567';
+ORDER BY cod.localidade;
 
--- Querie 3: Visualizar a existência de pelo menos uma EPCS por localidade
-SELECT cod.localidade, COUNT(*) AS quantidade_epcs
-FROM epcs e
-JOIN codigo_postal cod ON e.codigo_postal = cod.codigo_postal
-GROUP BY cod.localidade
-ORDER BY quantidade_epcs DESC;
-
--- Querie 4: Visualizar os emails de uma determinada EPCS (ex: '501234567')
+-- Querie 3: Lista os emails por epcs
 SELECT email.*, e.nome as nome_epcs
 FROM epcs e 
 JOIN email_epcs email ON e.nif = email.epcs
-WHERE e.nif = '501234567';
+ORDER BY e.nif;
 
--- Querie 5: Visualizar os telefones de uma determinada EPCS (ex: '501234567')
+-- Querie 4: Listar os telefones por epcs 
 SELECT tel.telefone, tel.epcs, e.nome as nome_epcs
 FROM epcs e
-JOIN telefone tel ON e.nif = tel.epcs
-WHERE e.nif = '501234567';
+JOIN telefone tel ON e.nif = tel.epcs;
 
--- Querie 6: Visualizar todas as viaturas de uma determinada EPCS (ex:'501234567')
-SELECT v.*, e.nome as epcs_nome
+-- Querie 5: Listar as viaturas por epcs e tipos de viaturas
+SELECT v.*, tipo_v.tipo as tipo_viatura, e.nome as epcs_nome
 FROM viatura v
 JOIN epcs e ON e.nif = v.epcs
-WHERE e.nif='501234567';
+JOIN tipo_viatura tipo_v ON v.tipo= tipo_v.idTipo
+ORDER BY v.epcs, tipo_v.tipo;
 
--- Querie 7: Visualizar viaturas ativas de uma determinada EPCS (ex:'501234567')
+-- Querie 6: Lista todas as viaturas em missão por epcs
 SELECT v.*, e.nome as nome_epcs
 FROM viatura v
 JOIN epcs e ON e.nif = v.epcs
-WHERE e.nif = '501234567' AND v.em_missao = 1;
+WHERE v.em_missao = 1
+ORDER BY v.epcs;
 
--- Querie 8: Verificar que as datas marcadas para as inspeções se encontram no intervalo de inspeção específico para cada equipamento
-SELECT eq.numero_serie, DATEDIFF(eq.data_inspecao_proxima, data_inspecao_anterior) as intervalo_inspecoes_marcadas, tipo_eq.intervalo_inspecao
+-- Querie 7: Determinar o intervalo entre as inspecoes marcadas e comparar com o intervalo de inspecao especido para cada equipamento
+SELECT eq.numero_serie, eq.descricao, eq.quantidade, eq.tipo, DATEDIFF(eq.data_inspecao_proxima, data_inspecao_anterior) as intervalo_inspecoes_marcadas, eq.viatura, tipo_eq.intervalo_inspecao
 FROM equipamento eq
 JOIN tipo_equipamento tipo_eq ON eq.tipo=tipo_eq.idTipo
 ORDER BY eq.numero_serie;
 
--- Querie 9: Visualizar missões se encontram ativas
-SELECT m.*
+-- Querie 8: Listar as viaturas com os tipos de equipamentos e quantidades existentes
+SELECT v.*, eq.tipo,  tipo_eq.tipo as tipo_equipamentos,  eq.quantidade as quantidade_equipamentos
+FROM equipamento eq 
+JOIN viatura v ON v.matricula = eq.viatura
+JOIN tipo_equipamento tipo_eq ON eq.tipo = tipo_eq.idTipo
+ORDER BY v.matricula, tipo_eq.tipo, eq.quantidade;
+
+-- Querie 9: Listar todas as viaturas por tipos de missao
+SELECT v.*, tipo_m.idtipo as idtipo_missao, tipo_m.tipo as tipo_missao
 FROM missao m
-JOIN pertence p ON p.missao=m.id_missao
-WHERE p.ativo=1;
+JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
+JOIN viatura v ON m.viatura=v.matricula
+ORDER BY tipo_m.idtipo;
 
--- Querie 10: Visualizar o paciente assistido a uma determinada hora e missão (ex: 2021-01-10 08:30:00 e missão 1)
-SELECT p.*
-FROM assistencia a
-JOIN pacientes p ON p.idpaciente=a.paciente
-WHERE a.missao= 1 AND a.data_hora_assist='2021-01-10 08:30:00';
-
--- Querie 11: Visualizar os profissionais que participaram numa determinada missão (ex: missão 1)
-SELECT prof.*
+-- Querie 10: Visualizar os profissionais por categoria e atividade
+SELECT prof.*, c.descricao as descricao_categoria, p.ativo
 FROM pertence p
-JOIN profissionais prof ON p.profissional = prof.nif
-WHERE p.missao=1;
+JOIN profissionais prof ON prof.nif=p.profissional
+JOIN categoria c ON c.idCategoria= prof.categoria
+ORDER BY prof.categoria, p.ativo;
 
--- Querie 12: Visualizar a quantidade de profissionais, por categoria e missão 
+-- Querie 11: Visualizar os pacientes assistidos por tipo de missão
+SELECT p.*, tipo_m.tipo as tipo_missao
+FROM assistencia a
+JOIN pacientes p ON a.paciente=p.idpaciente
+JOIN missao m ON a.missao = m.id_missao
+JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
+ORDER BY tipo_m.idtipo;
+
+-- Querie 12: Listar missões por tipo de missao e atividade
+SELECT m.*, tipo_m.tipo as tipo_missao, p.ativo
+FROM missao m
+JOIN tipo_missao tipo_m ON m.tipo=tipo_m.idtipo
+JOIN pertence p ON p.missao= m.id_missao
+ORDER BY tipo_m.idtipo, p.ativo;
+
+-- Querie 13: Determinar a quantidade de profissionais, por missao e categoria 
 SELECT p.missao, c.descricao, COUNT(*) as quantidade
 FROM pertence p
 JOIN profissionais prof ON p.profissional=prof.nif
