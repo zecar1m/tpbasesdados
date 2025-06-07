@@ -202,7 +202,7 @@ BEGIN
 	DECLARE existe_id INT;
 
     -- Verifica se já existe registo do paciente pelo cc ou nif (um dos dois pode ser nulo)
-    SELECT id INTO existe_id
+    SELECT idpaciente INTO existe_id
     FROM pacientes
     WHERE (cc = novo_cc AND novo_cc IS NOT NULL)
        OR (nif = novo_nif AND novo_nif IS NOT NULL)
@@ -235,6 +235,7 @@ BEGIN
 END$$
 DELIMITER ;
 
+
 -- Teste
 CALL identificar(NULL, 123422789, 'João Silva', NULL, NULL, '1990-05-21');
 CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
@@ -250,7 +251,7 @@ CALL identificar(NULL, NULL, 'Cristiano Ronaldo', NULL, NULL, '1985-02-05');
 DELIMITER $$
 CREATE PROCEDURE adicionar_telefone(IN in_tlf INT, IN in_nif INT)
 BEGIN
-    DECLARE entidade VARCHAR(10);
+    DECLARE entidade VARCHAR(20);
 
     -- Validação do telefone
     IF validar_telefone(in_tlf) = 0 THEN
